@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/products', [Controller::class, 'getProducts'])->name('products.index');
     Route::get('/products/{code}', [Controller::class, 'getDetailProduct'])->name('products.show');
     Route::get('/checkout', [Controller::class, 'cartList']);
+    Route::get('/process-checkout', [Controller::class, 'processCheckout']);
     Route::get('/reports', [Controller::class, 'getReports']);
     Route::post('logout', [LoginController::class, 'logout']);
 

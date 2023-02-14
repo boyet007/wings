@@ -1,6 +1,11 @@
 @extends('layouts.app')
 @section('content')
 <section class="h-100 h-custom" style="background-color: #eee;">
+    @if (Session::get('error'))
+        <div class="col-md-12 col-xl-10">
+            <h3 class="badge bg-error">{{ Session::get('error') }}</h3>
+        </div>
+    @endif
     <div class="container py-5 h-100">
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
@@ -46,11 +51,7 @@
                         <p class="mb-2">Subtotal</p>
                         <p class="mb-2">IDR {{ $subtotal }}</p>
                       </div>
-                      <button type="button" class="btn btn-info btn-block btn-lg">
-                        <div class="d-flex justify-content-between">
-                          <span>Confirm <i class="fas fa-long-arrow-alt-right ms-2"></i></span>
-                        </div>
-                      </button>
+                      <a href="/process-checkout" class="btn btn-info btn-block btn-lg">Confirm</a>
                     </div>
                   </div>
                 </div>

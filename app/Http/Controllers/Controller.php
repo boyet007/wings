@@ -7,7 +7,12 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use App\Models\Product;
+use App\Models\TransactionHeader;
+use App\Models\TransactionDetail;
+
 use Illuminate\Http\Request;
+use DB;
+use Auth;
 
 
 class Controller extends BaseController
@@ -26,6 +31,46 @@ class Controller extends BaseController
 
     public function checkout() {
         return view('checkout');
+    }
+
+    public function processCheckout() {
+        DB::beginTransaction();
+        $user = Auth::user();
+        try {
+            $carts = $this->getCarts();
+            $total = collect($carts)->sum(function($q) {
+                return $q['qty'] * $q['product_price'];
+            });
+            $trxNumber = str_pad((TransactionHeader::count()) + 1, 3, '0', STR_PAD_LEFT); 
+            $transactionHeader =  TransactionHeader::create([
+                'document_code' => 'TRX',
+                'document_number' => $trxNumber,
+                'username' => $user->username,
+                'total' => $total,
+                'date' => date('Y-m-d')
+            ]);
+
+            foreach($carts as $row) {
+                TransactionDetail::create([
+                        'document_code' => 'TRX',
+                        'document_number' => $trxNumber,
+                        'product_code' => $row['product_code'],
+                        'price' => $row['product_price'],
+                        'qty' => $row['qty'],
+                        'unit' => $row['product_unit'],
+                        'sub_total' => $row['qty'] * $row['product_price'],
+                        'currency' => $row['product_currency']
+                ]);
+            }
+            DB::commit();
+            $carts = [];
+            cookie('wing-carts', json_encode($carts), 2880);
+            return redirect()->back()->with(['success' => 'Transaction has been procesed']);
+        } catch (\Exception $ex) {
+            DB::rollback();
+            return redirect()->back()->with(['error' => $ex->getMessage()]);
+        }
+
     }
 
     // cart
@@ -61,6 +106,13 @@ class Controller extends BaseController
         }
         $cookie = cookie('wing-carts', json_encode($carts), 2880);
         return redirect()->back()->cookie($cookie)->with(['success' => 'Product has added to chart!']);
+    }
+
+    private function getCarts()
+    {
+        $carts = json_decode(request()->cookie('wing-carts'), true);
+        $carts = $carts != '' ? $carts:[];
+        return $carts;
     }
 
     public function getReports() {}

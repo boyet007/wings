@@ -17,7 +17,7 @@ class CreateTransactionHeadersTable extends Migration
         Schema::create('transaction_headers', function (Blueprint $table) {
             $table->string('document_code', 3);
             $table->string('document_number', 10);
-            $table->foreignIdFor(User::class);
+            $table->string('username');
             $table->double('total', 10, 2);
             $table->date('date');
             $table->primary(['document_code', 'document_number']);
