@@ -4,11 +4,20 @@
 <section style="background-color: #eee;">
     <div class="container py-5">
         <div class="row justify-content-center">
+        
+        @if (Session::get('success'))
+            <div class="col-md-12 col-xl-10">
+                <h3 class="badge bg-success">{{ Session::get('success') }}</h3>
+            </div>
+        @endif
         @foreach($products as $product)
             <div class="col-md-12 col-xl-10">
             <div class="card shadow-0 border rounded-3">
                 <div class="card-body">
                 <div class="row">
+                    <form style="display:flex;" action="{{ route('cart.store') }}" method="POST">
+                        @csrf
+                        <input name="product_code" type="hidden" value="{{ $product->product_code }}">
                     <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                     <div class="bg-image hover-zoom ripple rounded ripple-surface">
                         <a href="{{ route('products.show', $product->product_code) }}">
@@ -24,7 +33,7 @@
                     <div class="col-md-6 col-lg-6 col-xl-6">
                     <a href="{{ route('products.show', $product->product_code) }}"><h5>{{ $product->product_name }}</h5></a>
                     </div>
-                    <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                    <div class="col-md-6 col-lg-3 col-xl-3">
                     <div class="d-flex flex-row align-items-center mb-1">
                         <h4 class="mb-1 me-1">{{ $product->currency }} {{ $product->price - $product->discount / 100 * $product->price }}</h4>
                         @if($product->discount)
@@ -32,9 +41,10 @@
                         @endif
                     </div>
                     <div class="d-flex flex-column mt-4">
-                        <button class="btn btn-primary btn-lg" type="button">Buy</button>
+                        <button class="btn btn-primary btn-lg" type="submit">Buy</button>
                     </div>
                     </div>
+                    </form>
                 </div>
                 </div>
             </div>
