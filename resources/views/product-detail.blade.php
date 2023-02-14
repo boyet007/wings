@@ -21,9 +21,9 @@
                    @endif
                 </div>
               </div>
-              <div class="d-flex flex-column mt-4">
+              {{-- <div class="d-flex flex-column mt-4">
                 <button class="btn btn-primary btn-lg" type="button">Buy</button>
-            </div>
+            </div> --}}
             </div>
           </div>
         </div>
