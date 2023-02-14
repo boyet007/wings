@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller; 
+use App\Http\Controllers\Auth\LoginController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,15 @@ use App\Http\Controllers\Controller;
 */
 
     
-Route::get('/', [Controller::class, 'login']);
-Route::post('/post-login', [Controller::class, 'postLogin'])->name('post_login');
-Route::get('/products', [Controller::class, 'getProducts']);
-Route::get('/products/{code}', [Controller::class, 'getDetailProduct'])->name('products.show');
-Route::post('/checkout', [Controller::class, 'checkout']);
-Route::get('/reports', [Controller::class, 'getReports']);
+Route::get('/', [LoginController::class, 'login'])->name('login');
+Route::post('/post-login', [LoginController::class, 'postLogin'])->name('post_login');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/products', [Controller::class, 'getProducts']);
+    Route::get('/products/{code}', [Controller::class, 'getDetailProduct'])->name('products.show');
+    Route::get('/checkout', [Controller::class, 'checkout']);
+    Route::get('/reports', [Controller::class, 'getReports']);
+    Route::post('logout', [LoginController::class, 'logout']);
+});
+
+

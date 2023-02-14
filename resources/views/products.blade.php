@@ -42,7 +42,7 @@
       @endforeach
       <div class="col-md-12 col-xl-10 mt-2">
         <div class="d-flex justify-content-center">
-            <button class="btn btn-lg btn-info" href="#">Checkout</button>
+            <a class="btn btn-lg btn-info" href="/checkout">Checkout</a>
         </div>
             </div>
     </div>

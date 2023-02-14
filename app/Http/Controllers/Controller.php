@@ -13,15 +13,18 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function login() {
-        return view('login');
-    }
+ 
 
     public function postLogin() {}
 
     public function getProducts() {
         $products = Product::all();        
         return view('products', compact('products'));
+    }
+
+    public function getDetailProduct($code) {
+        $product = Product::where('product_code', $code)->first();
+        return view('product-detail', compact('product'));
     }
 
     public function checkout() {
