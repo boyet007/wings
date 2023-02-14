@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\User;
 
 class CreateTransactionHeadersTable extends Migration
 {
@@ -14,8 +15,12 @@ class CreateTransactionHeadersTable extends Migration
     public function up()
     {
         Schema::create('transaction_headers', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->string('document_code', 3);
+            $table->string('document_number', 10);
+            $table->foreignIdFor(User::class);
+            $table->double('total', 10, 2);
+            $table->date('date');
+            $table->primary(['document_code', 'document_number']);
         });
     }
 
