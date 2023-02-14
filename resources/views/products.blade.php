@@ -4,12 +4,16 @@
 <section style="background-color: #eee;">
     <div class="container py-5">
         <div class="row justify-content-center">
-        
         @if (Session::get('success'))
             <div class="col-md-12 col-xl-10">
                 <h3 class="badge bg-success">{{ Session::get('success') }}</h3>
             </div>
         @endif
+        <div class="col-md-12">
+            <div class="d-flex justify-content-end">
+                <a href="/logout" class="btn btn-info">Logout</a>
+            </div>
+        </div>
         @foreach($products as $product)
             <div class="col-md-12 col-xl-10">
             <div class="card shadow-0 border rounded-3">

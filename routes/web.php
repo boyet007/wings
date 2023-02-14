@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout', [Controller::class, 'cartList']);
     Route::get('/process-checkout', [Controller::class, 'processCheckout']);
     Route::get('/reports', [Controller::class, 'getReports']);
-    Route::post('logout', [LoginController::class, 'logout']);
+    Route::get('logout', [LoginController::class, 'logout']);
 
     Route::get('cart', [Controller::class, 'cartList'])->name('cart.list');
     Route::post('cart', [Controller::class, 'addToCart'])->name('cart.store');

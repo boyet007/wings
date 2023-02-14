@@ -9,6 +9,7 @@ use Illuminate\Routing\Controller as BaseController;
 use App\Models\Product;
 use App\Models\TransactionHeader;
 use App\Models\TransactionDetail;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use DB;
@@ -117,5 +118,26 @@ class Controller extends BaseController
         return $carts;
     }
 
-    public function getReports() {}
+    public function getReports() {
+        $transactions = TransactionHeader::all();
+
+        foreach($transactions as $transaction) {
+            $utc = new Carbon($transaction->date);
+            $transactionDate = $utc->timezone(env('TIMEZONE'))->format('d M y');   
+            $transaction->date = $transactionDate;
+            $transaction->total = "Rp " . number_format($transaction->total,2,',','.');
+
+            $details = TransactionDetail::where('document_code', $transaction->document_code)
+                ->where('document_number', $transaction->document_number)->get();
+
+            foreach($details as $detail) {
+                $productName = Product::where('product_code', $detail->product_code)->first()->product_name;
+                $detail->product_name = $productName;
+            }
+
+            $transaction->details = $details;
+        }
+
+        return view('report')->with(compact('transactions'));
+    }
 }

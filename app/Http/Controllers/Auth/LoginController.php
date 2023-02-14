@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
+use Cookie;
 
 class LoginController extends Controller
 {
@@ -50,6 +51,13 @@ class LoginController extends Controller
         return view('login');
     }
 
+    public function logout() {
+        Auth::logout();
+        $cookie = Cookie::forget('wing-carts');
+        return redirect()->route('login')
+            ->withCookie($cookie);
+    }
+
     public function postLogin(Request $request) {
         $request->validate([
             'username'=> 'required',
@@ -60,7 +68,7 @@ class LoginController extends Controller
         if ($user) {
             if(password_verify($request->password, $user->password)) {
                 auth()->login($user);
-                return redirect()->intended('products.show');
+                return redirect()->route('products.index');
             } else {
                 return redirect()->back()->with(['error' => 'Invalid username or password']);
             } 
