@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Auth;
 
 class LoginController extends Controller
 {
@@ -46,5 +48,24 @@ class LoginController extends Controller
 
     public function login() {
         return view('login');
+    }
+
+    public function postLogin(Request $request) {
+        $request->validate([
+            'username'=> 'required',
+            'password' => 'required'
+        ]);
+
+        $user = User::where(['username' => $request->username])->first();
+        if ($user) {
+            if(password_verify($request->password, $user->password)) {
+                auth()->login($user);
+                return redirect()->intended('products.show');
+            } else {
+                return redirect()->back()->with(['error' => 'Invalid username or password']);
+            } 
+        } else {
+            return redirect()->back()->with(['error' => 'User not registered']);
+        }
     }
 }

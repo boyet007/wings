@@ -13,10 +13,6 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
- 
-
-    public function postLogin() {}
-
     public function getProducts() {
         $products = Product::all();        
         return view('products', compact('products'));
