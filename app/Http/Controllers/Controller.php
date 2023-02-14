@@ -13,7 +13,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
-
+use Cookie;
 
 class Controller extends BaseController
 {
@@ -64,8 +64,10 @@ class Controller extends BaseController
             }
             DB::commit();
             $carts = [];
-            cookie('wing-carts', json_encode($carts), 2880);
-            return redirect()->back()->with(['success' => 'Transaction has been procesed']);
+            $cookie = Cookie::forget('wing-carts');
+            return redirect()->route('products.index')
+                ->with(['success' => 'Transaction has been procesed'])
+                ->withCookie($cookie);
         } catch (\Exception $ex) {
             DB::rollback();
             return redirect()->back()->with(['error' => $ex->getMessage()]);

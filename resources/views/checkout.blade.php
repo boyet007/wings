@@ -12,7 +12,8 @@
           <div class="card">
             <div class="card-body p-4">
               <div class="row">
-                @foreach($carts as $cart)
+                @if($carts)
+                    @foreach($carts as $cart)
                     <div class="col-lg-7">
                     <div class="card mb-3">
                         <div class="card-body">
@@ -41,21 +42,28 @@
                         </div>
                     </div>
                     </div>
-                @endforeach
-              </div>
-              <div class="row">
-                <div class="col-lg-5">
-                    <div class="card bg-primary text-white rounded-3">
-                    <div class="card-body">
-                      <div class="d-flex justify-content-between">
-                        <p class="mb-2">Subtotal</p>
-                        <p class="mb-2">IDR {{ $subtotal }}</p>
-                      </div>
-                      <a href="/process-checkout" class="btn btn-info btn-block btn-lg">Confirm</a>
+                    @endforeach
+                @else
+                    <div class="col-lg-7">
+                        <h2>There is no data in carts</h2>
                     </div>
-                  </div>
-                </div>
+                @endif
               </div>
+              @if($carts)
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="card bg-primary text-white rounded-3">
+                        <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <p class="mb-2">Subtotal</p>
+                            <p class="mb-2">IDR {{ $subtotal }}</p>
+                        </div>
+                        <a href="/process-checkout" class="btn btn-info btn-block btn-lg">Confirm</a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+              @endif
             </div>
           </div>
         </div>
